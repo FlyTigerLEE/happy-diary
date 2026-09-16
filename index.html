@@ -230,6 +230,13 @@ label.fld>span{display:block;margin-bottom:5px}
   background:rgba(255,255,255,.7);color:var(--text);font:inherit}
 .diary-date{font-size:13px;color:var(--text-sub);font-weight:700}
 .diary-content{font-size:14.5px;line-height:1.5;margin-top:3px}
+.diary-ops{display:flex;flex:0 0 auto;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.diary-sups{margin-top:8px;display:flex;flex-direction:column;gap:6px}
+.diary-sup{background:rgba(255,255,255,.5);border:1px solid var(--line);border-left:3px solid var(--accent-2);
+  border-radius:10px;padding:7px 10px}
+.diary-sup .ds-h{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--text-sub);font-weight:600}
+.diary-sup .ds-t{font-size:13px;line-height:1.65;margin-top:3px;color:var(--text)}
+body.bg-dark .diary-sup{background:rgba(255,255,255,.06)}
 /* 亮点卡片 / 热力图 */
 .hl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:6px}
 .hl-card{background:rgba(255,255,255,.62);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
@@ -265,6 +272,7 @@ label.fld>span{display:block;margin-bottom:5px}
   background:radial-gradient(circle,rgba(255,111,165,.16),transparent 70%)}
 .qc-name{font-size:13px;color:var(--text-sub);display:flex;align-items:center;gap:6px}
 .qc-price{font-size:25px;font-weight:800;letter-spacing:.5px;margin:4px 0 2px;font-variant-numeric:tabular-nums}
+.qc-unit{font-size:12px;font-weight:600;color:var(--text-sub);margin-left:3px;letter-spacing:0}
 .qc-chg{font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
 .qc-time{font-size:11px;color:var(--text-sub);margin-top:6px}
 .up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--text-sub)}
@@ -560,6 +568,33 @@ label.fld>span{display:block;margin-bottom:5px}
 .ft-reading{background:rgba(255,255,255,.58);border:1px solid var(--line);border-radius:14px;
   padding:13px 14px;font-size:14px;line-height:1.95;margin-top:12px}
 .ft-reading b{color:var(--accent)}
+/* 星座 / 属相今日运势 + 星座速配 */
+.ft-zone{margin-top:14px;padding:13px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.55);
+  background:linear-gradient(135deg,rgba(255,255,255,.62),rgba(238,228,255,.5));
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 6px 18px rgba(160,120,200,.10)}
+.ft-zone-h{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;margin-bottom:2px}
+.ft-zone-h .zz-sub{font-size:11.5px;font-weight:500;color:var(--text-sub)}
+.ft-dim-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:9px}
+.ft-dim{border-radius:12px;padding:8px 10px;background:rgba(255,255,255,.62);border:1px solid var(--line)}
+.ft-dim .fd-h{display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700}
+.ft-dim .fd-h .fd-ic{font-size:13px}
+.ft-dim .fd-s{margin-left:auto;font-size:11px}
+.ft-dim .fd-t{font-size:12px;line-height:1.6;color:var(--text-sub);margin-top:3px}
+.ft-zodiac{margin-top:10px;display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:1.7;
+  color:var(--text-sub);background:rgba(255,255,255,.5);border:1px solid var(--line);border-radius:12px;padding:8px 11px}
+.ft-zodiac .fz-ic{font-size:16px;flex:0 0 auto;line-height:1.4}
+.ft-pair{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.ft-pair .fp{flex:1 1 190px;min-width:0;display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;
+  background:rgba(255,255,255,.62);border:1px solid var(--line);font-size:12px;line-height:1.5}
+.ft-pair .fp .fp-k{flex:0 0 auto;font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px}
+.ft-pair .fp.best .fp-k{background:#ffe6f0;color:#c93b7a}
+.ft-pair .fp.care .fp-k{background:#e8f0ff;color:#3a5f9e}
+.ft-pair .fp .fp-t{color:var(--text-sub)}
+.ft-zone-tip{margin-top:8px;font-size:11px;color:var(--text-sub);opacity:.9}
+body.bg-dark .ft-zone{background:linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.04));border-color:rgba(255,255,255,.14)}
+body.bg-dark .ft-dim,body.bg-dark .ft-zodiac,body.bg-dark .ft-pair .fp{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12)}
+@media(max-width:520px){.ft-dim-grid{grid-template-columns:1fr}}
 .ft-log{display:flex;gap:11px;align-items:flex-start;padding:11px 12px;border-radius:13px;
   background:rgba(255,255,255,.55);border:1px solid var(--line);margin-bottom:7px;
   transition:transform .18s}
@@ -2185,9 +2220,16 @@ A.empty=function(text,fun){
    ========================================================= */
 const STORE_KEY='happyDiary_DB_v1';
 const BACKUP_KEY='happyDiary_backups_v1';
-const DB_VERSION=7;
-A.VERSION='2.3.1';   /* 展示给用户的应用版本号，随更新日志递增 */
+const DB_VERSION=8;
+A.VERSION='2.4.0';   /* 展示给用户的应用版本号，随更新日志递增 */
 /* 最新版本发布说明：用于新装默认值与老用户首次升级时自动注入更新日志 */
+A.RELEASE_2_4_0={version:'2.4.0',date:'2026-09-16',type:'feature',changes:[
+  '今日运势新增「星座 / 属相今日运势」：按生日自动判定星座与生肖，给出感情 / 事业 / 健康 / 财运四维度短评与属相一句话',
+  '今日运势新增「星座速配」：给出最速配星座与需注意星座，各配一句相处建议',
+  '时光日记支持「编辑」与「补充」：可修改正文与人物，也可在原文之后追加带时间戳的补充内容',
+  '今日金价改为双卡对照：左侧伦敦金现货 XAU（美元/盎司，腾讯源，稳定实时），右侧国内黄金连续 AU0（沪金主连，元/克），并给出内外盘同单位价差对照',
+  '修复国内金价取不到实时价的问题（合约代码大小写导致行情接口返回空值），并新增休市兜底：非交易时段显示昨收参考价而非空白'
+]};
 A.RELEASE_2_3_1={version:'2.3.1',date:'2026-09-09',type:'improve',changes:[
   '本地文件模式（file:// 打开）新增一次性说明：解释为何浏览器不提供「安装应用」按钮（安全规则禁止 file:// 注册 Service Worker）',
   '并引导通过 Chrome 菜单「添加到主屏幕」生成桌面快捷方式，避免重复困惑'
@@ -2209,6 +2251,7 @@ A.defaultDB=function(){
   return {
     meta:{version:DB_VERSION,createdAt:Date.now(),updatedAt:{},lastOpenDate:'',lastVersion:'',
       changelog:[
+        A.RELEASE_2_4_0,
         A.RELEASE_2_3_1,
         A.RELEASE_2_3_0,
         A.RELEASE_2_2_0,
@@ -2235,7 +2278,7 @@ A.defaultDB=function(){
     quotes:{
       items:[
         {id:'q1',name:'现货黄金 XAU',code:'hf_XAU',src:'tx',unit:'美元/盎司',group:'gold',on:true},
-        {id:'q2',name:'黄金连续 GC（COMEX）',code:'hf_GC',src:'tx',unit:'美元/盎司',group:'gold',on:true},
+        {id:'q2',name:'黄金连续 AU0',code:'nf_AU0',src:'em',unit:'元/克',group:'gold',on:true},
         {id:'q3',name:'创业板指',code:'sz399006',src:'tx',unit:'点',group:'index',on:true},
         {id:'q4',name:'科创50',code:'sh000688',src:'tx',unit:'点',group:'index',on:true},
         {id:'q5',name:'国证芯片(半导体)',code:'sz980017',src:'tx',unit:'点',group:'index',on:true},
@@ -2299,34 +2342,36 @@ function mergeDefaults(obj,def){
   return out;
 }
 A.mergeDefaults=mergeDefaults;
-/* 金价区：确保「现货黄金 XAU」与「黄金连续 GC（COMEX）」都存在且开启，并相邻排列（幂等） */
-const GOLD_PAIR=[{code:'hf_XAU',name:'现货黄金 XAU'},{code:'hf_GC',name:'黄金连续 GC（COMEX）'}];
+/* 金价区：确保「现货黄金 XAU」与「黄金连续 AU0（沪金）」都存在且开启，并相邻排列（幂等）
+   说明：v8 起不再强制 hf_GC（COMEX 连续）。用户自己添加的 hf_GC 会被原样保留，不再补回。 */
+const GOLD_PAIR=[{code:'hf_XAU',name:'现货黄金 XAU',unit:'美元/盎司',src:'tx'},
+                 {code:'nf_AU0',name:'黄金连续 AU0',unit:'元/克',src:'em'}];
 function ensureGoldPair(db){
   if(!db.quotes||typeof db.quotes!=='object') db.quotes=A.defaultDB().quotes;
   if(!Array.isArray(db.quotes.items)) db.quotes.items=A.defaultDB().quotes.items.slice();
   const items=db.quotes.items;
   /* 先去掉重复的黄金代码，避免同一行情出现两张卡 */
-  let firstXAU=-1,firstGC=-1;
+  let firstXAU=-1,firstAU0=-1;
   for(let i=items.length-1;i>=0;i--){
     const c=items[i]&&items[i].code;
     if(c==='hf_XAU'){ if(firstXAU<0) firstXAU=i; else items.splice(i,1); }
-    else if(c==='hf_GC'){ if(firstGC<0) firstGC=i; else items.splice(i,1); }
+    else if(c==='nf_AU0'){ if(firstAU0<0) firstAU0=i; else items.splice(i,1); }
   }
-  /* 现货黄金缺失则补到最前；黄金连续缺失则紧随现货黄金，保证两者并排 */
-  if(firstXAU<0){ items.unshift({id:'g_hf_XAU',name:GOLD_PAIR[0].name,code:'hf_XAU',src:'tx',unit:'美元/盎司',group:'gold',on:true}); firstXAU=0; if(firstGC>=0) firstGC++; }
+  /* 现货黄金缺失则补到最前；黄金连续 AU0 缺失则紧随现货黄金，保证两者并排 */
+  if(firstXAU<0){ items.unshift({id:'g_hf_XAU',name:GOLD_PAIR[0].name,code:'hf_XAU',src:'tx',unit:'美元/盎司',group:'gold',on:true}); firstXAU=0; if(firstAU0>=0) firstAU0++; }
   const spot=items[firstXAU];
-  spot.group='gold'; spot.src=spot.src||'tx'; spot.unit=spot.unit||'美元/盎司'; spot.on=true;
+  spot.group='gold'; spot.src=spot.src||GOLD_PAIR[0].src; spot.unit=spot.unit||GOLD_PAIR[0].unit; spot.on=true;
   if(!spot.name||/^纽约黄金|COMEX黄金$/.test(spot.name)) spot.name=GOLD_PAIR[0].name;
-  if(firstGC<0){
-    items.splice(firstXAU+1,0,{id:'g_hf_GC',name:GOLD_PAIR[1].name,code:'hf_GC',src:'tx',unit:'美元/盎司',group:'gold',on:true});
-    firstGC=firstXAU+1;
+  if(firstAU0<0){
+    items.splice(firstXAU+1,0,{id:'g_nf_AU0',name:GOLD_PAIR[1].name,code:'nf_AU0',src:'em',unit:'元/克',group:'gold',on:true});
+    firstAU0=firstXAU+1;
   }
-  const fut=items[firstGC];
-  fut.group='gold'; fut.src=fut.src||'tx'; fut.unit=fut.unit||'美元/盎司'; fut.on=true;
-  /* 老版本该项默认名是「纽约黄金 COMEX」，统一成「黄金连续 GC（COMEX）」 */
-  if(!fut.name||/^纽约黄金/.test(fut.name)||/^COMEX黄金/.test(fut.name)) fut.name=GOLD_PAIR[1].name;
+  const fut=items[firstAU0];
+  fut.group='gold'; fut.code='nf_AU0'; fut.src=GOLD_PAIR[1].src; fut.unit=GOLD_PAIR[1].unit; fut.on=true;
+  /* 老版本该项默认名是「黄金连续 GC（COMEX）」，统一成「黄金连续 AU0」 */
+  if(!fut.name||/GC|COMEX|纽约黄金/.test(fut.name)) fut.name=GOLD_PAIR[1].name;
   /* 保险：两项紧挨着，视觉上并列 */
-  if(firstGC!==firstXAU+1){ items.splice(firstGC,1); items.splice(firstXAU+1,0,fut); }
+  if(firstAU0!==firstXAU+1){ items.splice(firstAU0,1); items.splice(firstXAU+1,0,fut); }
 }
 A.ensureGoldPair=ensureGoldPair;
 /* 版本迁移：v1 -> v2 -> v3 补齐新增字段，老数据零丢失 */
@@ -2392,6 +2437,24 @@ A.migrate=function(db){
     if(!db.shopping||typeof db.shopping!=='object'||!Array.isArray(db.shopping.items)) db.shopping={items:[]};
     if(!db.travel||typeof db.travel!=='object'||!Array.isArray(db.travel.plans)) db.travel={plans:[]};
     v=7;
+  }
+  if(v<8){
+    /* v8：黄金连续 GC（COMEX）升级为国内「黄金连续 AU0」（沪金主连，元/克）；日记支持补充内容 */
+    if(db.quotes&&Array.isArray(db.quotes.items)){
+      db.quotes.items.forEach(it=>{
+        if(!it||typeof it!=='object') return;
+        /* 自动生成的 GC 项就地升级为 AU0；用户自定义命名的 hf_GC 原样保留，不再强制补回 */
+        if(it.code==='hf_GC'&&(!it.name||/GC|COMEX|纽约黄金/.test(it.name))){
+          it.code='nf_AU0'; it.name='黄金连续 AU0'; it.unit='元/克'; it.src='em'; it.group='gold';
+        }
+        if(it.code==='nf_AU0'){ it.src=it.src||'em'; it.unit=it.unit||'元/克'; it.group='gold'; }
+      });
+    }
+    ensureGoldPair(db);
+    if(db.diary&&Array.isArray(db.diary.logs)){
+      db.diary.logs.forEach(x=>{ if(x&&typeof x==='object'&&!Array.isArray(x.supplements)) x.supplements=[]; });
+    }
+    v=8;
   }
   db.meta.version=DB_VERSION;
   return db;
@@ -2905,7 +2968,7 @@ A.NAV=[
     {k:'sport:log',t:'运动记录',view:'sportLog'},
     {k:'sport:week',t:'运动周报',view:'sportWeek'},
     {k:'sport:month',t:'运动月报',view:'sportMonth'}]},
-  {k:'equip',t:'🏸 装备管理',ic:'🏸',sub:[
+  {k:'equip',t:'装备管理',ic:'🏸',sub:[
     {k:'equip:racket',t:'球拍管理',view:'equipment'},
     {k:'equip:shoe',t:'球鞋管理',view:'equipment'}]},
   {k:'health',t:'运动健康',ic:'⌚',sub:[
@@ -3172,7 +3235,7 @@ A.setCollapsed=function(v){
 /* ================= 今日资讯（实时金价 + 可配置指数 + 自动刷新） ================= */
 (function(A){
 'use strict';
-const $=A.$,$$=A.$$,esc=A.esc,num=A.num,today=A.today;
+const $=A.$,$$=A.$$,esc=A.esc,num=A.num,today=A.today,pad=A.pad;
 
 function txQuote(codes){
   return new Promise((resolve,reject)=>{
@@ -3187,8 +3250,75 @@ function txQuote(codes){
     document.head.appendChild(s);
   });
 }
+/* ---------------- 国内期货（nf_ 前缀，元 / 克、元 / 吨等） ----------------
+   腾讯 qt.gtimg.cn 不提供 nf_ 合约，改用东财公开行情（支持 JSONP、无跨域限制）。
+   nf_AU0 = 沪金主连（黄金连续），单位元/克。 */
+const NF_MKT={au:'113',ag:'113',cu:'113',al:'113',zn:'113',pb:'113',ni:'113',sn:'113',
+  rb:'113',hc:'113',bu:'113',ru:'113',fu:'113',wr:'113',sp:'113',ss:'113',
+  m:'114',y:'114',p:'114',a:'114',b:'114',c:'114',cs:'114',jd:'114',l:'114',
+  pp:'114',v:'114',j:'114',jm:'114',i:'114',eg:'114',eb:'114',pg:'114',
+  sr:'115',cf:'115',ta:'115',ma:'115',fg:'115',oi:'115',rm:'115',zc:'115',
+  sf:'115',sm:'115',cy:'115',ap:'115',cj:'115',ur:'115',sa:'115',
+  if:'8',ih:'8',ic:'8',im:'8',ts:'8',tf:'8',t:'8',sc:'142',lu:'142'};
+function isNF(code){ return String(code||'').indexOf('nf_')===0; }
+function emSecid(code){
+  const s=String(code||'').toLowerCase().replace(/^nf_/,'');
+  const m=s.match(/^([a-z]+)(\d+)$/);
+  if(!m) return null;
+  const sym=m[1],no=m[2];
+  const mk=NF_MKT[sym]||'113';
+  /* 0 → 主连/连续：东财约定后缀为大写 M（如 au0 → auM，secid=113.auM）；
+     小写 m 会被返回 f43:0，导致金价卡片无数据、行情看板不刷新。 */
+  return mk+'.'+sym+(no==='0'?'M':no);
+}
+let EM_SEQ=0;
+function emQuote(code){
+  return new Promise((resolve,reject)=>{
+    const secid=emSecid(code);
+    if(!secid) return reject(new Error('不支持的期货代码 '+code));
+    const cb='__emq'+(++EM_SEQ)+'_'+Date.now();
+    const s=document.createElement('script'); let done=false;
+    const fin=(f,a)=>{ if(done)return; done=true; clearTimeout(tid); try{s.remove();}catch(e){} try{delete window[cb];}catch(e){} f(a); };
+    const tid=setTimeout(()=>fin(reject,new Error('行情请求超时')),9000);
+    window[cb]=d=>fin(resolve,d);
+    s.onerror=()=>fin(reject,new Error('网络不可用'));
+    s.src='https://push2delay.eastmoney.com/api/qt/stock/get?secid='+encodeURIComponent(secid)+
+      '&fields=f43,f44,f45,f46,f57,f58,f59,f60,f86,f169,f170&cb='+cb+'&_='+Date.now();
+    document.head.appendChild(s);
+  });
+}
+A.emQuote=emQuote;
+function parseEM(code,d){
+  if(!d||!d.data) return null;
+  const o=d.data, p=Math.pow(10,num(o.f59,2));
+  let price=num(o.f43)/p, prev=num(o.f60)/p;
+  let chg=num(o.f169)/p, pct=num(o.f170)/100;
+  let closed=false;
+  /* 休市 / 未开盘：实时价 f43 为 0，则用昨收 f60 作参考价，避免卡片显示空白或 0 */
+  if((!isFinite(price)||price<=0)){
+    if(prev>0){ price=prev; chg=0; pct=0; closed=true; }
+    else return null;
+  }
+  if(!isFinite(chg)) chg=price-prev;
+  if(!isFinite(pct)) pct=prev?(price-prev)/prev*100:0;
+  let time='';
+  if(o.f86){ const dt=new Date(num(o.f86)*1000); if(!isNaN(dt)) time=pad(dt.getHours())+':'+pad(dt.getMinutes())+':'+pad(dt.getSeconds()); }
+  if(closed) time='休市 · 昨收 '+price.toFixed(2);
+  return {name:o.f58||code,code:code,price:price,prev:prev,open:num(o.f46)/p,
+    high:num(o.f44)/p,low:num(o.f45)/p,chg:chg,pct:pct,time:time,closed:closed};
+}
 function parseTx(code,raw){
   if(!raw) return null;
+  /* 国内期货（新浪格式，逗号分隔）：0名称 1时间 2开 3高 4低 5昨收 6买 7卖 8最新 9结算 10昨结算 */
+  if(isNF(code)&&raw.indexOf('~')<0){
+    const a=raw.split(',');
+    if(a.length>=11&&a[0]){
+      const price=num(a[8])||num(a[3]), prev=num(a[10])||num(a[5]);
+      const chg=price-prev, pct=prev?chg/prev*100:0;
+      return {name:a[0]||code,code:code,price:price,prev:prev,open:num(a[2]),
+        high:num(a[3]),low:num(a[4]),chg:chg,pct:pct,time:String(a[1]||'').replace(/(\d{2})(\d{2})(\d{2})/,'$1:$2:$3')};
+    }
+  }
   if(raw.indexOf('~')>0){
     const a=raw.split('~');
     return {name:a[1]||code,code:a[2]||code,price:num(a[3]),prev:num(a[4]),open:num(a[5]),
@@ -3205,38 +3335,63 @@ A.fetchQuotes=async function(force){
   if(!items.length) return;
   if(!force&&Q.lastTime&&(Date.now()-Q.lastTime<20000)) return;
   try{
-    const raw=await txQuote(items.map(i=>i.code));
     const ts=Date.now();
-    items.forEach(it=>{
-      const q=parseTx(it.code,raw[it.code]);
+    window.__quoteErr='';
+    const setQ=(it,q)=>{
       if(!q) return;
       if(q.chg===undefined||isNaN(q.chg)) q.chg=q.price-q.prev;
       if(q.pct===undefined||isNaN(q.pct)) q.pct=q.prev?(q.price-q.prev)/q.prev*100:0;
       if(!isFinite(q.chg)) q.chg=0; if(!isFinite(q.pct)) q.pct=0;
       if(isFinite(q.price)&&q.price>0){ q.ts=ts; Q.last[it.code]=q; }
+    };
+    const txItems=items.filter(i=>!isNF(i.code));
+    const nfItems=items.filter(i=>isNF(i.code));
+    const jobs=[];
+    if(txItems.length) jobs.push(
+      txQuote(txItems.map(i=>i.code))
+        .then(raw=>{ txItems.forEach(it=>setQ(it,parseTx(it.code,raw[it.code]))); })
+        .catch(e=>{ console.warn('外盘行情获取失败',e); window.__quoteErr=e.message||'外盘行情获取失败'; })
+    );
+    nfItems.forEach(it=>{
+      jobs.push(
+        emQuote(it.code).then(d=>setQ(it,parseEM(it.code,d)))
+          .catch(e=>{ console.warn('国内期货行情获取失败',e); window.__quoteErr=e.message||'国内期货行情获取失败'; })
+      );
     });
+    await Promise.all(jobs);
     Q.lastTime=ts; A.save('quotes');
   }catch(e){ console.warn('行情获取失败',e); window.__quoteErr=e.message; }
 };
 function quoteCardHTML(it){
   const Q=A.DB.quotes, q=(Q.last||{})[it.code];
   const mv=Q.manual||{};
-  let price='--',pct=0,chg=0,cls='flat',time='暂无数据',extra='';
-  if(mv[it.code]!=null&&mv[it.code]!==''){ price=num(mv[it.code]); time='手动填写'; }
-  else if(q){ price=q.price; pct=q.pct; chg=q.chg; cls=pct>0?'up':(pct<0?'down':'flat'); time=(q.time||'')+' 更新'; }
-  if(it.group==='gold'&&isFinite(price)&&String(it.code).indexOf('hf_')===0){
-    extra='<div class="text-sub" style="font-size:12px">≈ ¥'+(price*num(Q.usdcny,7.1)/31.1035).toFixed(2)+' / 克（汇率 '+num(Q.usdcny,7.1)+'）</div>';
+  const rate=num(Q.usdcny,7.1), OZ=31.1035;
+  let price='--',pct=0,chg=0,cls='flat',time='暂无数据',extra='',unit='',hi,lo;
+  if(mv[it.code]!=null&&mv[it.code]!==''){ price=num(mv[it.code]); time='手动填写'; unit=it.group==='gold'?'元/克':''; }
+  else if(q){
+    pct=q.pct; chg=q.chg; cls=pct>0?'up':(pct<0?'down':'flat'); time=(q.time||'')+' 更新';
+    if(it.group==='gold'&&String(it.code).indexOf('hf_')===0){
+      /* 伦敦金现货（腾讯源，稳定）：主数字保持 美元/盎司，下方给出折算的元/克参考 */
+      price=q.price; chg=q.chg; unit='美元/盎司'; hi=q.high; lo=q.low;
+      if(isFinite(price)&&price>0) extra='<div class="text-sub" style="font-size:12px">≈ ¥'+(price*rate/OZ).toFixed(2)+' / 克（汇率 '+rate+'）</div>';
+    }else{
+      price=q.price; unit=it.group==='gold'?(it.unit||'元/克'):''; hi=q.high; lo=q.low;
+      if(it.group==='gold'&&isNF(it.code)) extra='<div class="text-sub" style="font-size:12px">国内沪金连续合约，单位 元/克</div>';
+    }
   }
   const badge=(it.group!=='gold')?''
     :(it.code==='hf_XAU'?'<span class="qc-badge spot">现货</span>'
-    :(it.code==='hf_GC'?'<span class="qc-badge fut">连续</span>':''));
+    :(isNF(it.code)?'<span class="qc-badge fut">连续</span>':''));
+  const fmt0=v=>(isFinite(v)&&v>0)?v.toLocaleString('zh-CN',{maximumFractionDigits:2}):'—';
+  const unitHtml = unit ? ' <span class="qc-unit">'+unit+'</span>' : '';
+  const pTxt = isFinite(price) ? price.toLocaleString('zh-CN',{maximumFractionDigits:2}) + unitHtml : '--';
   return '<div class="qcard'+(it.group==='gold'?' gold-card':'')+'">'+
     '<div class="qc-name">'+(it.group==='gold'?'🥇':'📊')+' '+esc(it.name)+badge+'</div>'+
-    '<div class="qc-price '+cls+'">'+(isFinite(price)?price.toLocaleString('zh-CN',{maximumFractionDigits:2}):'--')+'</div>'+
+    '<div class="qc-price '+cls+'">'+pTxt+'</div>'+
     '<div class="qc-chg '+cls+'">'+(q?((pct>0?'▲ +':(pct<0?'▼ ':'— '))+(isFinite(chg)?chg.toFixed(2):'')+'　'+(pct>0?'+':'')+pct.toFixed(2)+'%'):'--')+'</div>'+
-    '<div class="qc-time">'+(q?(esc(time)+'　高 '+q.high+' / 低 '+q.low):esc(time))+'</div>'+extra+'</div>';
+    '<div class="qc-time">'+(q?(esc(time)+'　高 '+fmt0(hi)+' / 低 '+fmt0(lo)):esc(time))+'</div>'+extra+'</div>';
 }
-/* 期现价差：COMEX 黄金连续 − 伦敦金现货（两者都在看板上、且都有数据时才显示） */
+/* 内外盘金价对照（两者都在看板上、且都有数据时才显示） */
 function goldPairPrice(code){
   const Q=A.DB.quotes, mv=Q.manual||{};
   const it=(Q.items||[]).find(i=>i&&i.code===code&&i.on);
@@ -3246,24 +3401,26 @@ function goldPairPrice(code){
   else if(Q.last&&Q.last[code]) p=num(Q.last[code].price);
   return (isFinite(p)&&p>0)?p:null;
 }
+/* 内外盘金价对照：把伦敦金现货折算成元/克，再与国内黄金连续 AU0 比较（同单位才可比） */
 function goldSpreadHTML(){
   const Q=A.DB.quotes, rate=num(Q.usdcny,7.1), OZ=31.1035;
-  const spot=goldPairPrice('hf_XAU'), fut=goldPairPrice('hf_GC');
-  if(spot==null||fut==null) return '';
+  const spotRaw=goldPairPrice('hf_XAU'), fut=goldPairPrice('nf_AU0');
+  if(spotRaw==null||fut==null) return '';
+  const spot=spotRaw*rate/OZ;             /* 美元/盎司 → 元/克 */
   const d=fut-spot, pct=spot?d/spot*100:0;
   const cls=d>0?'up':(d<0?'down':'flat');
-  const g=(p)=>'¥'+(p*rate/OZ).toFixed(2);
-  const tag=d>0?'期货升水':(d<0?'期货贴水':'期现持平');
-  const tip=d>0?'连续合约价格高于现货，市场偏乐观，愿意为未来多付一点。'
-    :(d<0?'连续合约价格低于现货，短期情绪偏谨慎。':'连续与现货几乎一致，市场情绪平稳。');
+  const g=(p)=>'¥'+p.toFixed(2);
+  const tag=d>0?'内盘升水':(d<0?'内盘贴水':'内外持平');
+  const tip=d>0?'国内金价高于现货折算价，说明国内需求偏旺、情绪偏乐观。'
+    :(d<0?'国内金价低于现货折算价，短期情绪偏谨慎。':'国内外金价几乎一致，市场情绪平稳。');
   return '<div class="gold-spread">'+
-    '<div class="gs-h">📐 期现价差<span class="spacer"></span><span class="text-sub" style="font-weight:400">COMEX 黄金连续 − 伦敦金现货</span></div>'+
+    '<div class="gs-h">📐 内外盘金价对照<span class="spacer"></span><span class="text-sub" style="font-weight:400">沪金连续 AU0 − 伦敦金现货折算</span></div>'+
     '<div class="gs-body">'+
       '<span class="gs-num '+cls+'">'+(d>0?'+':'')+d.toFixed(2)+'</span>'+
-      '<span class="text-sub">美元/盎司（'+(pct>0?'+':'')+pct.toFixed(2)+'%）</span>'+
+      '<span class="text-sub">元 / 克（'+(pct>0?'+':'')+pct.toFixed(2)+'%）</span>'+
       '<span class="gs-tag">'+tag+'</span>'+
     '</div>'+
-    '<div class="text-sub">折合国内克价：现货 '+g(spot)+' / 克　·　连续 '+g(fut)+' / 克（汇率 '+rate+'）</div>'+
+    '<div class="text-sub">现货折算 '+g(spot)+' / 克　·　沪金 AU0 '+g(fut)+' / 克（汇率 '+rate+'，1 盎司 = 31.1035 克）</div>'+
     '<div class="text-sub" style="opacity:.85">'+tip+'</div>'+
   '</div>';
 }
@@ -3287,7 +3444,8 @@ A.newsQuote=function(pv){
     (golds?'<div class="quote-grid'+(golds===2?' gold-pair':'')+'" data-group="gold">'+goldHTML()+'</div>'+
       '<div data-goldspread>'+goldSpreadHTML()+'</div>'
       :A.empty('还没有金价项目','去“指数 / 金价设置”加一个，派大星也想看金价'))+
-    '<div class="text-sub" style="margin-top:10px">数据源：腾讯财经公开行情接口（伦敦金现货 XAU/USD ＋ COMEX 黄金连续 GC），1 金衡盎司 = 31.1035 克。</div>'+
+    '<div class="text-sub" style="margin-top:10px">数据源：伦敦金现货 XAU/USD 取自腾讯财经公开行情，国内黄金连续 AU0（沪金主连）取自东方财富公开行情；'+
+      '1 金衡盎司 = 31.1035 克，国内合约行情为延时数据，仅供参考。</div>'+
   '</div>'+
   '<div class="card"><div class="card-h">📊 指数行情<span class="spacer"></span><span class="text-sub" id="qTime"></span></div>'+
     '<div class="row quote-bar" style="margin-bottom:12px">'+
@@ -3323,7 +3481,8 @@ A.newsCfg=function(pv){
   const items=A.DB.quotes.items||[];
   pv.innerHTML=
   '<div class="card"><div class="card-h">📈 行情项目<span class="spacer"></span><button class="btn mini" onclick="App.addQuote()">+ 新增</button></div>'+
-    '<div class="text-sub" style="margin-bottom:10px">勾选的项目显示在“行情看板”。数据源为腾讯财经（国内直连、稳定，支持 A 股指数、港股、外盘贵金属）。</div>'+
+    '<div class="text-sub" style="margin-bottom:10px">勾选的项目显示在“行情看板”。数据源：A 股 / 港股 / 外盘贵金属走腾讯财经；'+
+      '以 <code>nf_</code> 开头的国内期货（如 <code>nf_AU0</code> 沪金连续）走东方财富。</div>'+
     (items.length?items.map(it=>
       '<div class="list-row"><input type="checkbox" '+(it.on?'checked':'')+' onchange="App.toggleQuote(\''+it.id+'\')" style="width:18px;height:18px;accent-color:var(--accent)">'+
       '<div class="lr-main"><div class="lr-title">'+esc(it.name)+'</div><div class="lr-sub">'+esc(it.code)+' · '+esc(it.unit||'')+(it.group==='gold'?' · 金价':'')+'</div></div>'+
@@ -3339,7 +3498,7 @@ A.newsCfg=function(pv){
     '<tr><td>北证50</td><td><code>bj899050</code></td><td>国证芯片</td><td><code>sz980017</code></td></tr>'+
     '<tr><td>恒生科技指数</td><td><code>hkHSTECH</code></td><td>恒生指数</td><td><code>hkHSI</code></td></tr>'+
     '<tr><td>纳斯达克</td><td><code>usIXIC</code></td><td>道琼斯</td><td><code>usDJI</code></td></tr>'+
-    '<tr><td>现货黄金 XAU</td><td><code>hf_XAU</code></td><td>黄金连续 GC（COMEX）</td><td><code>hf_GC</code></td></tr>'+
+    '<tr><td>现货黄金 XAU</td><td><code>hf_XAU</code></td><td>黄金连续 AU0（沪金）</td><td><code>nf_AU0</code></td></tr>'+
     '<tr><td>白银</td><td><code>hf_XAG</code></td><td>纽约原油</td><td><code>hf_CL</code></td></tr>'+
     '</table></div></div>';
 };
@@ -3350,7 +3509,7 @@ A.editQuote=function(id){
   const it=id?A.DB.quotes.items.find(x=>x.id===id):{id:A.uid(),name:'',code:'',src:'tx',unit:'点',group:'index',on:true};
   A.openModal(id?'编辑行情项目':'新增行情项目',
     '<label class="fld"><span>显示名称</span><input type="text" id="qf_name" value="'+esc(it.name)+'" placeholder="例如：创业板指"></label>'+
-    '<label class="fld"><span>行情代码</span><input type="text" id="qf_code" value="'+esc(it.code)+'" placeholder="例如：sz399006 / hf_XAU"></label>'+
+    '<label class="fld"><span>行情代码</span><input type="text" id="qf_code" value="'+esc(it.code)+'" placeholder="例如：sz399006 / hf_XAU / nf_AU0"></label>'+
     '<label class="fld"><span>单位</span><input type="text" id="qf_unit" value="'+esc(it.unit||'')+'" placeholder="点 / 美元每盎司"></label>'+
     '<label class="fld"><span>分组</span><select id="qf_group"><option value="index"'+(it.group==='index'?' selected':'')+'>指数</option><option value="gold"'+(it.group==='gold'?' selected':'')+'>金价</option></select></label>'+
     '<label class="chk"><input type="checkbox" id="qf_on" '+(it.on?'checked':'')+'> 显示在行情看板</label>',
@@ -5052,6 +5211,129 @@ function signOfBirth(){
 }
 A.fortuneZodiac=A.zodiacOf; A.fortuneSign=signOfBirth;
 
+/* ---------------- 星座 / 属相今日运势 ---------------- */
+const SIGN_TRAIT={
+  '摩羯座':'踏实肯干','水瓶座':'想法独特','双鱼座':'心思细腻','白羊座':'行动力满格',
+  '金牛座':'稳重靠谱','双子座':'反应机敏','巨蟹座':'温柔顾家','狮子座':'气场十足',
+  '处女座':'细致严谨','天秤座':'善于协调','天蝎座':'专注而坚定','射手座':'自由洒脱'
+};
+const SIGN_DIMS=[{k:'感情',ic:'💗'},{k:'事业',ic:'💼'},{k:'健康',ic:'🌿'},{k:'财运',ic:'💰'}];
+/* 四维度 × 五档文案（1 最弱 → 5 最强），同一天同一星座结果固定 */
+const SIGN_FORT={
+  感情:{
+    1:['今天容易钻牛角尖，话到嘴边先停三秒。','对方可能也有点累，别急着要一个答案。','先照顾好自己，再去照顾这段关系。'],
+    2:['有点小误会，解释清楚就没事了。','别把情绪憋着，说出来反而轻松。','今天适合安静陪伴，不需要太多言语。'],
+    3:['平平淡淡也很踏实，一起吃顿饭就很好。','感情按部就班，别制造不必要的考验。','一句关心的问候，比惊喜更管用。'],
+    4:['主动一点，对方可能正在等你的消息。','今天的你很有吸引力，好好把握。','适合表白或和解，气氛刚刚好。'],
+    5:['甜度爆表，适合安排一场小约会。','心意相通的一天，说什么都合拍。','大胆表达爱意，今天运气站在你这边。']},
+  事业:{
+    1:['今天别接新活，把手头的收尾就好。','容易遇到卡点，先放一放再想。','沟通成本偏高，重要事项改天再谈。'],
+    2:['进展有点慢，别因此否定自己。','多做少说，把事情默默做完。','细节容易出错，检查一遍再提交。'],
+    3:['按部就班推进，稳就是快。','常规的一天，把计划落到实处。','不太出彩但也不出错，其实挺好。'],
+    4:['思路清晰，适合处理一直拖着的难题。','你的努力被看见了，继续保持。','适合主动争取，机会偏爱先开口的人。'],
+    5:['今天效率惊人，重要的事都安排上。','有好消息传来的征兆，留意通知。','放手去做，成果会超出预期。']},
+  健康:{
+    1:['有点疲惫，早点睡比什么都重要。','注意肠胃，别吃太凉太油。','久坐之后记得站起来活动一下。'],
+    2:['睡眠不足会拖慢你，今晚早点休息。','肩颈容易发僵，拉伸两分钟。','别硬撑，身体在发出小信号。'],
+    3:['状态平稳，保持现在的作息就好。','多喝水，少喝一杯咖啡。','适合散步半小时，出点小汗。'],
+    4:['精力充沛，适合运动或户外活动。','气色不错，继续保持好习惯。','适合开始一个新的健身小计划。'],
+    5:['状态满分，身体轻盈心情也明亮。','可以挑战高强度训练，但别过量。','整个人都在发光，好好享受今天。']},
+  财运:{
+    1:['今天别做大额决定，容易冲动。','看紧钱包，非必要的先不买。','有人来借钱的话，先缓一缓。'],
+    2:['有点意外支出，提前心里有数。','别被促销带节奏，清单外的先放放。','理财方面宜守不宜攻。'],
+    3:['收支平衡，按预算走就没问题。','没有惊喜也没有惊吓，挺好的。','适合记账复盘，看清钱的去向。'],
+    4:['有小进账的迹象，留意奖金或兼职。','适合做长期规划，眼光放远一点。','今天的消费决策大概率不后悔。'],
+    5:['财运亮眼，意外之喜可能上门。','适合谈加薪或推进合作。','好运来了要接住，也别忘了存一点。']}
+};
+const ZODIAC_FORT={
+  '鼠':['机灵的你今天点子特别多，想到就先记下来。','贵人在身边，多听少说不吃亏。','小有奔波，但每一步都不白走。'],
+  '牛':['踏实做事的一天，慢一点反而更稳。','坚持了很久的事，今天会看到一点回响。','别把压力都自己扛，说出口就轻了。'],
+  '虎':['气势正旺，适合主动出击。','冲劲足但要留三分，别把话说满。','今天适合做决定，别再犹豫了。'],
+  '兔':['温柔的一天，照顾别人也别忘了照顾自己。','有小事需要耐心，别急着下结论。','直觉很准，跟着感觉走没错。'],
+  '龙':['状态在线，适合亮相和表现。','今天很容易被看见，大方一点更好。','野心可以大，步子要踩稳。'],
+  '蛇':['思路缜密，适合处理复杂问题。','今天的你看得很透，但别太挑剔。','适合独处复盘，答案会自己浮出来。'],
+  '马':['节奏很快的一天，注意别透支。','说走就走也挺好，但先给手机充上电。','适合社交，好运藏在人脉里。'],
+  '羊':['温和的一天，做点让自己舒服的事。','别太为难自己，标准可以稍微松一点。','有人会向你示好，接住就好。'],
+  '猴':['脑子转得快，适合解决难题。','别贪多，做完一件再开下一件。','小聪明用对地方，就是大智慧。'],
+  '鸡':['细致认真是今天的加分项。','注意说话方式，好意也要好好说。','适合整理与收尾，把事情做干净。'],
+  '狗':['可靠的一天，会有人来依赖你。','别太较真，给自己留点余地。','适合陪伴，简单相处就很暖。'],
+  '猪':['松弛的一天，适合好好享受生活。','别被小事扰了心情，什么都值得。','胃口和运气都不错，给自己加点菜。']
+};
+/* 星座速配：最速配 + 需注意（同元素 / 相邻元素互补，对宫稍加留意） */
+const SIGN_MATCH={
+  '摩羯座':{best:'金牛座',care:'白羊座'},'水瓶座':{best:'双子座',care:'金牛座'},
+  '双鱼座':{best:'巨蟹座',care:'双子座'},'白羊座':{best:'狮子座',care:'巨蟹座'},
+  '金牛座':{best:'处女座',care:'狮子座'},'双子座':{best:'天秤座',care:'处女座'},
+  '巨蟹座':{best:'天蝎座',care:'天秤座'},'狮子座':{best:'射手座',care:'天蝎座'},
+  '处女座':{best:'摩羯座',care:'射手座'},'天秤座':{best:'水瓶座',care:'摩羯座'},
+  '天蝎座':{best:'双鱼座',care:'水瓶座'},'射手座':{best:'白羊座',care:'双鱼座'}
+};
+const FORT_W=[8,18,34,26,14];   /* 运势档位权重：中间档更常见 */
+function fortLevelFrom(r){
+  let x=r()*100,acc=0,i=0;
+  for(;i<5;i++){ acc+=FORT_W[i]; if(x<acc) break; }
+  return Math.min(5,i+1);
+}
+function signFortuneOf(sign,date){
+  if(!sign) return null;
+  const dims=SIGN_DIMS.map(dim=>{
+    const r=rngFrom(seedOf('signfort|'+date+'|'+sign.t+'|'+dim.k));
+    const level=fortLevelFrom(r);
+    const pool=(SIGN_FORT[dim.k]&&SIGN_FORT[dim.k][level])||[''];
+    return {k:dim.k,ic:dim.ic,level:level,text:pool[Math.floor(r()*pool.length)%pool.length]};
+  });
+  return {sign:sign,dims:dims};
+}
+function zodiacFortuneOf(zod,date){
+  if(!zod) return null;
+  const pool=ZODIAC_FORT[zod]||[''];
+  const r=rngFrom(seedOf('zodfort|'+date+'|'+zod));
+  return {zod:zod,text:pool[Math.floor(r()*pool.length)%pool.length]};
+}
+function signMatchOf(sign){
+  if(!sign) return null;
+  const m=SIGN_MATCH[sign.t]; if(!m) return null;
+  const find=t=>SIGNS.filter(s=>s.t===t)[0]||null;
+  const best=find(m.best), care=find(m.care);
+  return {best:best,care:care,
+    bestText:best?('和'+best.t+'最合拍，'+(SIGN_TRAIT[best.t]||'')+'刚好补上你的短板。'):'',
+    careText:care?('和'+care.t+'容易各说各话，多解释一句、慢半拍回应就顺了。'):''};
+}
+A.fortuneSignDetail=function(date){ return {sign:signFortuneOf(signOfBirth(),date||today()),
+  zodiac:zodiacFortuneOf(birthStr()?A.zodiacOf(birthStr()):'',date||today()),match:signMatchOf(signOfBirth())}; };
+/* 运势卡片底部的「星座 / 属相今日运势 + 速配」区块 */
+function fortuneZoneHTML(date){
+  const sg=signOfBirth(), bstr=birthStr();
+  const bz=bstr?A.zodiacOf(bstr):'';
+  if(!sg&&!bz){
+    return '<div class="ft-zone"><div class="ft-zone-h">🔮 星座 · 属相今日运势</div>'+
+      '<div class="text-sub" style="font-size:12.5px;line-height:1.7">还没有填生日，星座和属相都算不出来呀～填好之后这里每天会自动更新。</div>'+
+      '<div class="row" style="gap:8px;margin-top:9px"><button class="btn mini" onclick="App.go(\'me:info\')">去填生日</button></div></div>';
+  }
+  const sf=signFortuneOf(sg,date), zf=zodiacFortuneOf(bz,date), sm=signMatchOf(sg);
+  let h='<div class="ft-zone"><div class="ft-zone-h">🔮 今日星座 · 属相运势'+
+    '<span class="spacer"></span><span class="zz-sub">'+
+      (sg?(sg.ic+' '+sg.t):'星座未填')+(bz?(' · 属'+bz):'')+'</span></div>';
+  if(sf){
+    h+='<div class="ft-dim-grid">'+sf.dims.map(dm=>
+      '<div class="ft-dim"><div class="fd-h"><span class="fd-ic">'+dm.ic+'</span>'+dm.k+
+        '<span class="fd-s">'+starsHTML(dm.level,'11px')+'</span></div>'+
+        '<div class="fd-t">'+esc(dm.text)+'</div></div>').join('')+'</div>';
+  }
+  if(zf){
+    h+='<div class="ft-zodiac"><span class="fz-ic">🐾</span><div><b>属'+esc(zf.zod)+'</b>：'+esc(zf.text)+'</div></div>';
+  }
+  if(sm&&sm.best){
+    h+='<div class="ft-pair">'+
+      '<div class="fp best"><span class="fp-k">💞 最速配</span><span class="fp-t"><b>'+esc(sm.best.t)+'</b>　'+esc(sm.bestText)+'</span></div>'+
+      (sm.care?'<div class="fp care"><span class="fp-k">⚠️ 需注意</span><span class="fp-t"><b>'+esc(sm.care.t)+'</b>　'+esc(sm.careText)+'</span></div>':'')+
+    '</div>';
+  }
+  h+='<div class="ft-zone-tip">按「生日 + 当天日期」生成，同一天刷新结果一致，每天 0 点自动换新。</div></div>';
+  return h;
+}
+A.fortuneZoneHTML=fortuneZoneHTML;
+
 /* ---------------- 确定性随机（日期种子） ---------------- */
 function seedOf(str){
   let h=2166136261; const s=String(str);
@@ -5203,6 +5485,7 @@ A.fortuneToday=function(pv){
       '<span class="lucky">🔢 幸运数字 <b>'+num(c.number)+'</b></span>'+
     '</div>'+
     '<div class="ft-reading">'+c.reading+'</div>'+
+    fortuneZoneHTML(d)+
     '<div class="row" style="gap:8px;margin-top:12px">'+
       '<button class="btn" onclick="App.fortuneRedraw()">🎴 重新抽牌</button>'+
       '<button class="btn ghost" onclick="App.fortuneRefresh()">✨ 刷新运势</button>'+
@@ -6080,7 +6363,7 @@ function injectPWA(){
         /* 注册 URL 附带版本参数：穿透平台边缘缓存，
            保证手机端每次都能发现真正的最新 sw.js（边缘缓存按完整 URL 键控，
            裸路径 /sw.js 曾被证实会长期返回旧版）。 */
-        navigator.serviceWorker.register('./sw.js?v=17',{updateViaCache:'none'}).then(function(reg){
+        navigator.serviceWorker.register('./sw.js?v=18',{updateViaCache:'none'}).then(function(reg){
           /* 已有新版本在等待激活：直接提示 */
           if(reg.waiting && navigator.serviceWorker.controller) showSwUpdate();
           reg.addEventListener('updatefound',function(){
@@ -8230,6 +8513,26 @@ function diaryCount(arr,keyFn){
   return Object.keys(m).map(name=>({name,c:m[name]})).sort((a,b)=>b.c-a.c);
 }
 
+/* 补充内容（旧数据没有 supplements 字段时按空数组处理，零侵入兼容） */
+function diarySups(d){ return (d&&Array.isArray(d.supplements))?d.supplements:[]; }
+function diaryTimeText(ts){
+  const dt=new Date(ts); if(isNaN(dt)) return '';
+  const now=new Date();
+  const sameDay=dt.getFullYear()===now.getFullYear()&&dt.getMonth()===now.getMonth()&&dt.getDate()===now.getDate();
+  const d=(sameDay?'今天':((dt.getMonth()+1)+'月'+dt.getDate()+'日'));
+  return d+' '+pad(dt.getHours())+':'+pad(dt.getMinutes());
+}
+function diarySupsHTML(d){
+  const arr=diarySups(d);
+  if(!arr.length) return '';
+  return '<div class="diary-sups">'+arr.map((s,i)=>
+    '<div class="diary-sup">'+
+      '<div class="ds-h">📝 补充 · '+esc(diaryTimeText(s.createdAt))+
+        '<span class="spacer"></span>'+
+        '<button class="btn mini ghost" onclick="App.diaryDelSup(\''+esc(d.id)+'\','+i+')">删除</button></div>'+
+      '<div class="ds-t">'+(s.text?esc(s.text):'<span class="text-sub">(空)</span>')+'</div>'+
+    '</div>').join('')+'</div>';
+}
 /* 单条日记行 */
 function diaryRowHTML(d){
   return '<div class="list-row">'+
@@ -8237,8 +8540,13 @@ function diaryRowHTML(d){
       '<div class="diary-date">📅 '+esc(d.date)+'</div>'+
       '<div class="diary-content">'+(d.content?esc(d.content):'<span class="text-sub">(无文字内容)</span>')+'</div>'+
       diaryPeopleTags(d.people)+
+      diarySupsHTML(d)+
     '</div>'+
-    '<button class="btn mini danger" onclick="App.diaryDel(\''+esc(d.id)+'\')">删除</button>'+
+    '<div class="diary-ops">'+
+      '<button class="btn mini ghost" onclick="App.diaryEdit(\''+esc(d.id)+'\')">编辑</button>'+
+      '<button class="btn mini ghost" onclick="App.diarySupplement(\''+esc(d.id)+'\')">补充</button>'+
+      '<button class="btn mini danger" onclick="App.diaryDel(\''+esc(d.id)+'\')">删除</button>'+
+    '</div>'+
   '</div>';
 }
 
@@ -8275,6 +8583,7 @@ A.diarySave=function(){
     content:content,
     people:people,
     tags:[],
+    supplements:[],
     createdAt:Date.now()
   });
   A.save('diary');
@@ -8290,6 +8599,55 @@ A.diaryDel=function(id){
     A.save('diary');
     A.render();
     A.toast('已删除','ok');
+  },'删除');
+};
+
+A.diaryRowHTML=diaryRowHTML;
+/* ---- 编辑 / 补充 ---- */
+function diaryFind(id){ return diaryLogs().find(x=>x.id===id)||null; }
+/* 编辑正文与人物：日期、原始记录时间、已有补充全部保留 */
+A.diaryEdit=function(id){
+  const d=diaryFind(id);
+  if(!d){ A.toast('这条记录找不到了','err'); return; }
+  A.openModal('编辑日记 · '+d.date,
+    '<label class="fld"><span>正文</span><textarea id="de_content" rows="4" placeholder="今天做了什么？">'+esc(d.content||'')+'</textarea></label>'+
+    '<label class="fld"><span>和谁一起（多个用逗号分隔）</span><input type="text" id="de_people" value="'+esc((d.people||[]).join(', '))+'" placeholder="如：张三, 李四"></label>'+
+    '<div class="text-sub" style="font-size:12px">日期、写入时间与已有补充都不会被改动。</div>',
+    '<button class="btn ghost" onclick="App.closeModal()">取消</button><button class="btn" onclick="App.modalOK()">保存</button>',
+    ()=>{
+      const c=($('#de_content')?$('#de_content').value:'').trim();
+      const p=($('#de_people')?$('#de_people').value:'').trim();
+      if(!c&&!p){ A.toast('至少写点什么再保存哦','warn'); return false; }
+      d.content=c;
+      d.people=diaryParsePeople(p);
+      if(!Array.isArray(d.supplements)) d.supplements=[];
+      A.save('diary'); A.render(); A.toast('已更新 ✓','ok');
+    });
+};
+/* 追加补充：不动原文，带时间戳排在原文下方 */
+A.diarySupplement=function(id){
+  const d=diaryFind(id);
+  if(!d){ A.toast('这条记录找不到了','err'); return; }
+  if(!Array.isArray(d.supplements)) d.supplements=[];
+  A.openModal('补充日记 · '+d.date,
+    '<div class="text-sub" style="margin-bottom:10px;line-height:1.7">原文：'+esc(d.content||'(无文字内容)')+'</div>'+
+    '<label class="fld"><span>补充内容</span><textarea id="ds_text" rows="4" placeholder="后来又发生了什么？"></textarea></label>'+
+    '<div class="text-sub" style="font-size:12px">补充会带日期时间追加在原文下面，原文保持不变；已有 '+d.supplements.length+' 条补充。</div>',
+    '<button class="btn ghost" onclick="App.closeModal()">取消</button><button class="btn" onclick="App.modalOK()">保存补充</button>',
+    ()=>{
+      const t=($('#ds_text')?$('#ds_text').value:'').trim();
+      if(!t){ A.toast('补充内容不能为空哦','warn'); return false; }
+      d.supplements.push({text:t,createdAt:Date.now()});
+      A.save('diary'); A.render(); A.toast('补充已保存 ✓','ok');
+    });
+};
+A.diaryDelSup=function(id,idx){
+  const d=diaryFind(id);
+  if(!d) return;
+  A.confirmBox('删除补充','确定删除这条补充内容吗？',()=>{
+    if(!Array.isArray(d.supplements)) d.supplements=[];
+    d.supplements.splice(idx,1);
+    A.save('diary'); A.render(); A.toast('已删除','ok');
   },'删除');
 };
 
@@ -8345,6 +8703,7 @@ A.diaryMonth=function(pv){
               '<div class="tl-date">'+esc(d.date)+'</div>'+
               '<div class="diary-content" style="margin-top:4px">'+(d.content?esc(d.content):'<span class="text-sub">(无文字内容)</span>')+'</div>'+
               diaryPeopleTags(d.people)+
+              diarySupsHTML(d)+
             '</div></div>'
           ).join('')+'</div>'+
         '</div>'
