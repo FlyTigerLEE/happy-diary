@@ -12,8 +12,8 @@
       保证拿到的永远是最新真实文件；
    5. 跨域请求（行情 JSONP、Gitee 云同步）直连网络，
       与沙箱是否休眠完全无关。 */
-const CACHE = 'happy-diary-v18';
-const SWV = '18';
+const CACHE = 'happy-diary-v19';
+const SWV = '19';
 const ASSETS = [
   './',
   './index.html',
