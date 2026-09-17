@@ -13,6 +13,8 @@
 <meta name="application-name" content="我的快乐日记">
 <meta name="description" content="我的快乐日记 - 派大星主题的个人工作平台">
 <title>我的快乐日记</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./icon-180.png">
 <link rel="icon" id="appIcon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23ffd9ea'/%3E%3Cpath d='M32 12c8 0 14 10 14 20s-6 18-14 18-14-8-14-18 6-20 14-20z' fill='%23ff9ec4'/%3E%3Ccircle cx='26' cy='32' r='4' fill='%23fff'/%3E%3Ccircle cx='38' cy='32' r='4' fill='%23fff'/%3E%3Ccircle cx='26' cy='32' r='2' fill='%23333'/%3E%3Ccircle cx='38' cy='32' r='2' fill='%23333'/%3E%3Cpath d='M26 42c4 4 8 4 12 0' stroke='%23333' stroke-width='2.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
 /* ============ 基础与主题变量 ============ */
@@ -6339,9 +6341,10 @@ function injectPWA(){
     /* 线上（http/https）：使用同源的真实 manifest 并注册 Service Worker，
        这是 Android Chrome 判定“可安装”并隐藏地址栏的必要条件 */
     if(proto==='http:'||proto==='https:'){
-      const lm=document.createElement('link'); lm.rel='manifest'; lm.href='./manifest.json'; document.head.appendChild(lm);
-      const ai=document.createElement('link'); ai.rel='apple-touch-icon'; ai.href='./icon-180.png'; document.head.appendChild(ai);
-      const fi=document.createElement('link'); fi.rel='icon'; fi.type='image/png'; fi.href='./icon-192.png'; document.head.appendChild(fi);
+      /* manifest / apple-touch-icon / icon 链接已在 index.html 的 <head> 静态写入，
+         以保证 Chrome 在加载阶段即可识别“可安装”并弹出“安装应用”（生成真正的 WebAPK）。
+         之前用 JS 动态注入的写法会错过 Chrome 的安装扫描，导致只能“添加到主屏幕”（书签），
+         无法生成应用、设置里也查不到。此处只保留 Service Worker 注册。 */
       if('serviceWorker' in navigator){
         /* 注册时禁止浏览器缓存 sw.js，确保每次都能检测到新版本 */
         let swRefreshing=false;
@@ -6363,7 +6366,7 @@ function injectPWA(){
         /* 注册 URL 附带版本参数：穿透平台边缘缓存，
            保证手机端每次都能发现真正的最新 sw.js（边缘缓存按完整 URL 键控，
            裸路径 /sw.js 曾被证实会长期返回旧版）。 */
-        navigator.serviceWorker.register('./sw.js?v=18',{updateViaCache:'none'}).then(function(reg){
+        navigator.serviceWorker.register('./sw.js?v=19',{updateViaCache:'none'}).then(function(reg){
           /* 已有新版本在等待激活：直接提示 */
           if(reg.waiting && navigator.serviceWorker.controller) showSwUpdate();
           reg.addEventListener('updatefound',function(){
